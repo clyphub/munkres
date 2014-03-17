@@ -27,7 +27,7 @@ see [LICENSE](https://github.com/clyphub/munkres/blob/master/LICENSE) file
 Brian Fallik - bfallik at clypd.com
 
 ## Dependencies
-This packages uses [stretchr/testify](http://godoc.org/github.com/stretchr/testify) for helping unit test assertions.
+This packages uses [stretchr/testify](http://godoc.org/github.com/stretchr/testify) for help with unit test assertions.
 
 ## Development
 Pull requests welcome!
