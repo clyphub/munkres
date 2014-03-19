@@ -25,8 +25,9 @@ func NewMatrix(n int) *Matrix {
 
 func (m *Matrix) Print() {
 	for i := 0; i < m.n; i++ {
+		rowStart := i * m.n
 		for j := 0; j < m.n; j++ {
-			fmt.Print(m.A[i*m.n+j], " ")
+			fmt.Print(m.A[rowStart+j], " ")
 		}
 		fmt.Println()
 	}
@@ -109,8 +110,9 @@ func clearCovers(ctx *Context) {
 func (Step2) Compute(ctx *Context) (Step, bool) {
 	n := ctx.m.n
 	for i := 0; i < n; i++ {
+		rowStart := i * n
 		for j := 0; j < n; j++ {
-			pos := i*n + j
+			pos := rowStart + j
 			if (ctx.m.A[pos] == 0) &&
 				!ctx.colCovered[j] && !ctx.rowCovered[i] {
 				ctx.marked[pos] = Starred
@@ -127,8 +129,9 @@ func (Step3) Compute(ctx *Context) (Step, bool) {
 	n := ctx.m.n
 	count := 0
 	for i := 0; i < n; i++ {
+		rowStart := i * n
 		for j := 0; j < n; j++ {
-			pos := i*n + j
+			pos := rowStart + j
 			if ctx.marked[pos] == Starred {
 				ctx.colCovered[j] = true
 				count++
@@ -148,8 +151,9 @@ func findAZero(ctx *Context) (int, int) {
 	n := ctx.m.n
 Loop:
 	for i := 0; i < n; i++ {
+		rowStart := i * n
 		for j := 0; j < n; j++ {
-			if (ctx.m.A[i*n+j] == 0) &&
+			if (ctx.m.A[rowStart+j] == 0) &&
 				!ctx.rowCovered[i] && !ctx.colCovered[j] {
 				row = i
 				col = j
@@ -218,10 +222,11 @@ func convertPath(ctx *Context, count int) {
 	n := ctx.m.n
 	for i := 0; i < count+1; i++ {
 		r, c := ctx.rowPath[i], ctx.colPath[i]
-		if ctx.marked[r*n+c] == Starred {
-			ctx.marked[r*n+c] = Unset
+		offset := r*n + c
+		if ctx.marked[offset] == Starred {
+			ctx.marked[offset] = Unset
 		} else {
-			ctx.marked[r*n+c] = Starred
+			ctx.marked[offset] = Starred
 		}
 	}
 }
@@ -229,9 +234,10 @@ func convertPath(ctx *Context, count int) {
 func erasePrimes(ctx *Context) {
 	n := ctx.m.n
 	for i := 0; i < n; i++ {
+		rowStart := i * n
 		for j := 0; j < n; j++ {
-			if ctx.marked[i*n+j] == Primed {
-				ctx.marked[i*n+j] = Unset
+			if ctx.marked[rowStart+j] == Primed {
+				ctx.marked[rowStart+j] = Unset
 			}
 		}
 	}
@@ -269,10 +275,12 @@ func findSmallest(ctx *Context) int64 {
 	n := ctx.m.n
 	minval := int64(math.MaxInt64)
 	for i := 0; i < n; i++ {
+		rowStart := i * n
 		for j := 0; j < n; j++ {
 			if (!ctx.rowCovered[i]) && (!ctx.colCovered[j]) {
-				if minval > ctx.m.A[i*n+j] {
-					minval = ctx.m.A[i*n+j]
+				a := ctx.m.A[rowStart+j]
+				if minval > a {
+					minval = a
 				}
 			}
 		}
@@ -284,12 +292,13 @@ func (Step6) Compute(ctx *Context) (Step, bool) {
 	n := ctx.m.n
 	minval := findSmallest(ctx)
 	for i := 0; i < n; i++ {
+		rowStart := i * n
 		for j := 0; j < n; j++ {
 			if ctx.rowCovered[i] {
-				ctx.m.A[i*n+j] += minval
+				ctx.m.A[rowStart+j] += minval
 			}
 			if !ctx.colCovered[j] {
-				ctx.m.A[i*n+j] -= minval
+				ctx.m.A[rowStart+j] -= minval
 			}
 		}
 	}
@@ -304,12 +313,13 @@ func (ctx *Context) String() string {
 	var buf bytes.Buffer
 	n := ctx.m.n
 	for i := 0; i < n; i++ {
+		rowStart := i * n
 		for j := 0; j < n; j++ {
 			fmt.Fprint(&buf, ctx.m.A[i*n+j])
-			if ctx.marked[i*n+j] == Starred {
+			if ctx.marked[rowStart+j] == Starred {
 				fmt.Fprint(&buf, "*")
 			}
-			if ctx.marked[i*n+j] == Primed {
+			if ctx.marked[rowStart+j] == Primed {
 				fmt.Fprint(&buf, "'")
 			}
 			fmt.Fprint(&buf, " ")
@@ -355,8 +365,9 @@ func computeMunkres(m *Matrix, minimize bool) []RowCol {
 	results := []RowCol{}
 	n := m.n
 	for i := 0; i < n; i++ {
+		rowStart := i * n
 		for j := 0; j < n; j++ {
-			if ctx.marked[i*n+j] == Starred {
+			if ctx.marked[rowStart+j] == Starred {
 				results = append(results, RowCol{i, j})
 			}
 		}
