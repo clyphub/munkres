@@ -30,7 +30,7 @@ Brian Fallik - bfallik at clypd.com
 This packages uses [stretchr/testify](http://godoc.org/github.com/stretchr/testify) for help with unit test assertions.
 
 ## Development
-Pull requests welcome!
+We are no longer actively maintaining this package.  Please fork it if you wish to develop it further.
 
 ## Other
 Thanks to [clypd](http://www.clypd.com) for agreeing to release this code into the wild.
