@@ -306,7 +306,7 @@ func (Step6) Compute(ctx *Context) (Step, bool) {
 }
 
 type RowCol struct {
-	row, col int
+	Row, Col int
 }
 
 func (ctx *Context) String() string {
